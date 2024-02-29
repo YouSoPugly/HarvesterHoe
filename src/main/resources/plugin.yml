@@ -1,0 +1,26 @@
+name: HarvesterHoe
+version: '${project.version}'
+main: xyz.pugly.harvesterhoe.HarvesterHoe
+author: Pugly
+description: A Harvester Hoe plugin.
+depend:
+    - Vault
+commands:
+    harvesterhoe:
+        description: Main Harvester Hoe command.
+        usage: /harvesterhoe [args]
+        aliases: [hh]
+permissions:
+    harvesterhoe.use:
+        description: Permission to use the Harvester Hoe.
+        default: true
+    harvesterhoe.reload:
+        description: Permission to reload the Harvester Hoe.
+        default: op
+    harvesterhoe.give:
+        description: Permission to give the Harvester Hoe.
+        default: op
+    harvesterhoe.admin:
+      children:
+        harvesterhoe.reload: true
+        harvesterhoe.give: true

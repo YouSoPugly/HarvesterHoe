@@ -1,0 +1,63 @@
+sell-price: 100
+#### Item Section ####
+item:
+  name: '&a&lHarvester Hoe'
+  lore:
+    - '&7This is the default lore.'
+    - '&7Too lazy to change :yawn:.'
+    - '&7' # Empty line
+#### Drops Section ####
+drops:
+  command:
+    chance: .3 # 30% chance
+    command: 'give %player% diamond 1' # Replaces %player% with the player's name.
+  item:
+    chance: .3
+    item: 'DIAMOND'
+#### Upgrades Section ####
+# %level% is the level of the upgrade.
+# %random% is a random number between 0 and 1, this will be chosen ONCE per upgrade.
+# %player% is the player's name.
+# %count% is the amount of blocks broken.
+# Use curly brackets to define math.
+upgrades:
+  radius: # Upgrade id
+      name: 'Radius' # Display name
+      max-level: 3 # Max level
+      price: 1000 # Price
+      info: "&7Increases the radius broken." # Info
+      actions: # List of actions, leave blank for custom actions such as radius.
+  multiplier:
+    name: 'Multiplier'
+    max-level: 3
+    price: 1000
+    info: "&7Multiplies the crop yield."
+    actions:
+  speed:
+      name: 'Speed'
+      max-level: 3
+      price: 250
+      info: "&7Gives the player speed."
+      chance: 1.0 # 100% chance
+      actions:
+        effects:
+          - 'SPEED' # Effect name
+  jc:
+      name: 'JunkCoins'
+      max-level: 5
+      price: 1000
+      info: "&7Has a chance to give JunkCoins."
+      chance: 0.03 # 3% chance
+      actions:
+        commands:
+          - 'junkcoins give %player% {%level%*10}' # Use curly brackets to define math.
+        message: '&7You got &a{%level%*10} &7JunkCoins!'
+  money:
+    name: 'Money'
+    max-level: 10
+    price: 1000
+    info: "&7Has a chance to give lots of money."
+    chance: 0.01 # 1% chance
+    actions:
+      eco: '{floor((3*%level%*(.5+%random%/2))^3)*100}'
+      message: '&7You got &a${floor((3*%level%*(.5+%random%/2))^3)*100}!'
