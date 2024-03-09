@@ -1,12 +1,12 @@
-package xyz.pugly.harvesterhoe;
+package xyz.pugly.harvesterhoe.hoe;
 
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import xyz.pugly.harvesterhoe.HarvesterHoe;
+import xyz.pugly.harvesterhoe.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -79,6 +79,10 @@ public class Upgrade {
         return cost;
     }
 
+    public String toString() {
+        return "Upgrade: " + name + " | Description: " + description + " | Max Level: " + maxLevel + " | Cost: " + cost;
+    }
+
     public void apply(Player p, int level, int count) {
         if (HarvesterHoe.getDebug())
             HarvesterHoe.get().getLogger().info("Applying upgrade: " + name + " | Level: " + level + " | Count: " + count);
@@ -130,6 +134,24 @@ public class Upgrade {
                 end = i;
                 String sub = s.substring(start+1, end);
                 Object d = Utils.eval(sub);
+                s = s.replace(s.substring(start, end + 1), String.valueOf(d));
+                i-=end-start;
+            }
+
+            i++;
+        }
+
+        i = 0;
+        start = -1;
+        while (i <= s.length()-1) {
+
+            if (s.charAt(i) == '<') {
+                start = i;
+            }
+            if (s.charAt(i) == '>' && start != -1) {
+                end = i;
+                String sub = s.substring(start+1, end);
+                Object d = Utils.prettify(Double.parseDouble(sub));
                 s = s.replace(s.substring(start, end + 1), String.valueOf(d));
                 i-=end-start;
             }

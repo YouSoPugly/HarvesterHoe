@@ -1,4 +1,4 @@
-package xyz.pugly.harvesterhoe;
+package xyz.pugly.harvesterhoe.utils;
 
 import org.bukkit.ChatColor;
 
@@ -6,6 +6,23 @@ public class Utils {
 
     public static String colorize(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);
+    }
+
+    public static String prettify(double d) {
+        if (d > 1000000000)
+            return String.format("%.2fB", d / 1000000000);
+
+        if (d > 1000000)
+            return String.format("%.2fM", d / 1000000);
+
+        if (d > 1000)
+            return String.format("%.2fK", d / 1000);
+
+        return String.format("%.2f", d);
+    }
+
+    public static String prettify(int i) {
+        return prettify((double) i);
     }
 
     // Thx https://stackoverflow.com/questions/3422673/how-to-evaluate-a-math-expression-given-in-string-form

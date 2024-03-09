@@ -1,12 +1,14 @@
-package xyz.pugly.harvesterhoe;
+package xyz.pugly.harvesterhoe.hoe;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.pugly.harvesterhoe.HarvesterHoe;
+import xyz.pugly.harvesterhoe.utils.ConfigHandler;
+import xyz.pugly.harvesterhoe.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class ItemHandler {
         ItemStack item = new ItemStack(org.bukkit.Material.DIAMOND_HOE);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(Utils.colorize(FileHandler.getItemConfig().getString("name")));
+        meta.setDisplayName(Utils.colorize(ConfigHandler.getItemConfig().getString("name")));
         meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
         meta.addEnchant(Enchantment.LUCK, 1, true);
         meta.setLore(getLore());
@@ -29,11 +31,15 @@ public class ItemHandler {
         return item;
     }
 
+    public static ItemStack getHarvesterHoe(Hoe hoe) {
+        return getHarvesterHoe(hoe.getUpgrades());
+    }
+
     public static ItemStack getHarvesterHoe(HashMap<Upgrade, Integer> upgrades) {
         ItemStack item = new ItemStack(org.bukkit.Material.DIAMOND_HOE);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(Utils.colorize(FileHandler.getItemConfig().getString("name")));
+        meta.setDisplayName(Utils.colorize(ConfigHandler.getItemConfig().getString("name")));
         meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS);
         meta.addEnchant(Enchantment.LUCK, 1, true);
         List<String> lore = getLore();
@@ -56,8 +62,8 @@ public class ItemHandler {
     public static List<String> getLore() {
         ArrayList<String> lore;
         if (HarvesterHoe.getDebug())
-            HarvesterHoe.get().getLogger().info("lore: " + FileHandler.getItemConfig().getStringList("lore"));
-        lore = (ArrayList<String>) FileHandler.getItemConfig().getStringList("lore");
+            HarvesterHoe.get().getLogger().info("lore: " + ConfigHandler.getItemConfig().getStringList("lore"));
+        lore = (ArrayList<String>) ConfigHandler.getItemConfig().getStringList("lore");
         lore.replaceAll(Utils::colorize);
         return lore;
     }

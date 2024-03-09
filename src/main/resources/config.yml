@@ -1,12 +1,15 @@
-sell-price: 100
+prefix: '&a&lHarvester Hoe &8» &7'
+sell-cost: 100
+save-time: 10 # Save time in minutes
 #### Item Section ####
 item:
   name: '&a&lHarvester Hoe'
   lore:
     - '&7This is the default lore.'
     - '&7Too lazy to change :yawn:.'
-    - '&7' # Empty line
+    - ' ' # Empty line before upgrades
 #### Drops Section ####
+# These happen regardless of whether the player has any upgrades.
 drops:
   command:
     chance: .3 # 30% chance
@@ -20,24 +23,25 @@ drops:
 # %player% is the player's name.
 # %count% is the amount of blocks broken.
 # Use curly brackets to define math.
+# Use <> to prettify a number.
 upgrades:
   radius: # Upgrade id
       name: 'Radius' # Display name
       max-level: 3 # Max level
-      price: 1000 # Price
-      info: "&7Increases the radius broken." # Info
+      cost: 1000 # Cost
+      description: "&7Increases the radius broken." # Description
       actions: # List of actions, leave blank for custom actions such as radius.
   multiplier:
     name: 'Multiplier'
     max-level: 3
-    price: 1000
-    info: "&7Multiplies the crop yield."
+    cost: 1000
+    description: "&7Multiplies the crop yield."
     actions:
   speed:
       name: 'Speed'
       max-level: 3
-      price: 250
-      info: "&7Gives the player speed."
+      cost: 250
+      description: "&7Gives the player speed."
       chance: 1.0 # 100% chance
       actions:
         effects:
@@ -45,19 +49,19 @@ upgrades:
   jc:
       name: 'JunkCoins'
       max-level: 5
-      price: 1000
-      info: "&7Has a chance to give JunkCoins."
+      cost: 1000
+      description: "&7Has a chance to give JunkCoins."
       chance: 0.03 # 3% chance
       actions:
         commands:
           - 'junkcoins give %player% {%level%*10}' # Use curly brackets to define math.
-        message: '&7You got &a{%level%*10} &7JunkCoins!'
+        message: '&7You got &a<{%level%*10}> &7JunkCoins!'
   money:
     name: 'Money'
     max-level: 10
-    price: 1000
-    info: "&7Has a chance to give lots of money."
+    cost: 1000
+    description: "&7Has a chance to give lots of money."
     chance: 0.01 # 1% chance
     actions:
       eco: '{floor((3*%level%*(.5+%random%/2))^3)*100}'
-      message: '&7You got &a${floor((3*%level%*(.5+%random%/2))^3)*100}!'
+      message: '&7You got &a$<{floor((3*%level%*(.5+%random%/2))^3)*100}>!'

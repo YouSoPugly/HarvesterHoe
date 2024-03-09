@@ -1,10 +1,8 @@
-package xyz.pugly.harvesterhoe;
+package xyz.pugly.harvesterhoe.listeners;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +12,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.pugly.harvesterhoe.HarvesterHoe;
+import xyz.pugly.harvesterhoe.hoe.Drop;
+import xyz.pugly.harvesterhoe.hoe.Hoe;
+import xyz.pugly.harvesterhoe.hoe.ItemHandler;
+import xyz.pugly.harvesterhoe.hoe.Upgrade;
+import xyz.pugly.harvesterhoe.hoe.UpgradeGui;
+import xyz.pugly.harvesterhoe.utils.ConfigHandler;
+import xyz.pugly.harvesterhoe.utils.PlayerData;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,11 +28,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CaneListener implements org.bukkit.event.Listener {
+public class HoeListener implements org.bukkit.event.Listener {
 
     private final Economy econ;
 
-    public CaneListener(HarvesterHoe plugin) {
+    public HoeListener(HarvesterHoe plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         econ = HarvesterHoe.getEconomy();
     }
@@ -65,7 +71,7 @@ public class CaneListener implements org.bukkit.event.Listener {
 
         e.setCancelled(true);
 
-        Map<Upgrade, Integer> upgrades = getUpgrades(item);
+        Map<Upgrade, Integer> upgrades = Hoe.get(item).getUpgrades();
         Set<String> upgradeIDS = upgrades.keySet().stream().map(Upgrade::getId).collect(Collectors.toSet());
 
         int count = breakCane(e.getBlock().getLocation());
@@ -82,7 +88,7 @@ public class CaneListener implements org.bukkit.event.Listener {
             }
         }
 
-        int sellPrice = FileHandler.getSellPrice();
+        int sellPrice = ConfigHandler.getSellPrice();
 
         if (HarvesterHoe.getDebug())
             e.getPlayer().sendMessage("\u00a7aYou have broken " + count + " sugar cane, sell price is: " + sellPrice);
@@ -92,13 +98,15 @@ public class CaneListener implements org.bukkit.event.Listener {
         }
 
         econ.depositPlayer(e.getPlayer(), count * sellPrice);
+        PlayerData.addBalance(e.getPlayer().getUniqueId(), count);
+        PlayerData.addCane(e.getPlayer().getUniqueId(), count);
         giveDrops(e.getPlayer(), count);
         applyUpgrades(e.getPlayer(), upgrades, count);
     }
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent e) {
-        if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
 
         if (e.getItem() == null) return;
         if (e.getItem().getType() != Material.DIAMOND_HOE) return;
@@ -109,7 +117,7 @@ public class CaneListener implements org.bukkit.event.Listener {
 
         if (!e.getPlayer().isSneaking()) return;
 
-        // TODO gui :D
+        UpgradeGui.open(e.getPlayer());
     }
 
     private int breakCane(Location l) {
@@ -122,36 +130,8 @@ public class CaneListener implements org.bukkit.event.Listener {
         return count;
     }
 
-    private Map<Upgrade, Integer> getUpgrades(ItemStack item) {
-
-        Map<Upgrade, Integer> upgrades = new HashMap<>();
-
-        ItemMeta meta = item.getItemMeta();
-        List<String> lore = meta.getLore();
-
-        lore.removeAll(ItemHandler.getLore());
-
-        for (String s : lore) {
-            String[] split = s.split(" ");
-            if (HarvesterHoe.getDebug())
-                HarvesterHoe.get().getLogger().info("Upgrades Lore: " + Arrays.toString(split));
-            if (split.length <= 1) continue;
-            Upgrade up = Upgrade.getUpgrade(split[0]);
-
-            if (up == null) continue;
-
-            int level = Integer.parseInt(split[1].replaceAll("[^0-9]", ""));
-            upgrades.put(up, level);
-        }
-
-        if (HarvesterHoe.getDebug())
-            HarvesterHoe.get().getLogger().info("Upgrades: " + upgrades);
-
-        return upgrades;
-    }
-
     private void giveDrops(Player p, int count) {
-        Set<Drop> drops = FileHandler.getDrops();
+        Set<Drop> drops = ConfigHandler.getDrops();
         for (Drop drop : drops) {
             drop.apply(p, count);
         }

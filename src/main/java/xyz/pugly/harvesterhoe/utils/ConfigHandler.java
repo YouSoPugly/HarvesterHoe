@@ -1,18 +1,26 @@
-package xyz.pugly.harvesterhoe;
+package xyz.pugly.harvesterhoe.utils;
 
+import com.google.gson.JsonObject;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import xyz.pugly.harvesterhoe.hoe.Drop;
+import xyz.pugly.harvesterhoe.HarvesterHoe;
+import xyz.pugly.harvesterhoe.hoe.Upgrade;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class FileHandler {
+public class ConfigHandler {
 
+    // Default Config.yml -------------------
     private static HarvesterHoe plugin;
     private static FileConfiguration config;
     private static int sellPrice;
+    private static long saveTime;
+    private static String prefix;
     private static ConfigurationSection itemConfig;
     private static ConfigurationSection dropsConfig;
     private static ConfigurationSection upgradesConfig;
@@ -35,6 +43,13 @@ public class FileHandler {
         return sellPrice;
     }
 
+    public static long getSaveTime() {
+        return saveTime;
+    }
+    public static String getPrefix() {
+        return prefix;
+    }
+
     public static ConfigurationSection getItemConfig() {
         return itemConfig;
     }
@@ -47,6 +62,8 @@ public class FileHandler {
         plugin.reloadConfig();
         config = plugin.getConfig();
         sellPrice = config.getInt("sell-price");
+        saveTime = config.getLong("save-time");
+        prefix = Utils.colorize(config.getString("prefix"));
         itemConfig = config.getConfigurationSection("item");
         dropsConfig = config.getConfigurationSection("drops");
         upgradesConfig = config.getConfigurationSection("upgrades");

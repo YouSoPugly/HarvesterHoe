@@ -1,13 +1,18 @@
 package xyz.pugly.harvesterhoe;
 
+import com.samjakob.spigui.SpiGUI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.pugly.harvesterhoe.listeners.HoeListener;
+import xyz.pugly.harvesterhoe.utils.ConfigHandler;
+import xyz.pugly.harvesterhoe.utils.PlayerData;
 
 public final class HarvesterHoe extends JavaPlugin {
 
     private static Economy econ = null;
     private static final boolean debug = false;
+    public static SpiGUI spigui;
     private static HarvesterHoe instance;
 
     @Override
@@ -20,9 +25,18 @@ public final class HarvesterHoe extends JavaPlugin {
             return;
         }
 
+        if (!PlayerData.init()) {
+            getLogger().severe("PlayerData failed to initialize.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        spigui = new SpiGUI(this);
+        getLogger().info("SpiGUI has been enabled!");
+
         // Plugin startup logic
-        FileHandler.init(this);
-        new CaneListener(this);
+        ConfigHandler.init(this);
+        new HoeListener(this);
         getCommand("harvesterhoe").setExecutor(new CommandHandler(this));
 
         this.getLogger().info("HarvesterHoe has been enabled!");
@@ -31,6 +45,8 @@ public final class HarvesterHoe extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        PlayerData.save();
+        getLogger().info("HarvesterHoe has been disabled!");
     }
 
     private boolean setupEconomy() {

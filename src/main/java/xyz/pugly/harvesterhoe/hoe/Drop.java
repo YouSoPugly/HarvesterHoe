@@ -1,8 +1,9 @@
-package xyz.pugly.harvesterhoe;
+package xyz.pugly.harvesterhoe.hoe;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.pugly.harvesterhoe.HarvesterHoe;
 
 import java.util.Random;
 
