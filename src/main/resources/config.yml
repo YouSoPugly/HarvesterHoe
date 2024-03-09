@@ -11,7 +11,7 @@ item:
 #### Drops Section ####
 # These happen regardless of whether the player has any upgrades.
 drops:
-#  WARNING: Commands do output to console.
+#  WARNING: Commands output to console.
 #  command:
 #    chance: .3 # 30% chance
 #    command: 'give %player% diamond 1' # Replaces %player% with the player's name.
